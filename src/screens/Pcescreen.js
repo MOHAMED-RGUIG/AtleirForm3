@@ -32,6 +32,10 @@ function Pcescreen() {
                 setDesignt('');
                 setNSerie('');
             }
+        } else {
+            setclt('');
+            setDesignt('');
+            setNSerie('');
         }
     }, [_idDem, data]);
 
@@ -58,7 +62,33 @@ function Pcescreen() {
         } else {
             setSearchTerm('DEM');
         }
+        set_idDem(value);
     };
+
+    const handleSelectChange = (e) => {
+        const value = e.target.value;
+        set_idDem(value);
+    };
+
+    // Effet pour mettre à jour les autres champs lorsque _idDem change
+    useEffect(() => {
+        if (_idDem && data.length > 0) {
+            const foundItem = data.find(item => item._idDem === _idDem);
+            if (foundItem) {
+                setclt(foundItem.Clt);
+                setDesignt(foundItem.Designt);
+                setNSerie(foundItem.NSerie);
+            } else {
+                setclt('');
+                setDesignt('');
+                setNSerie('');
+            }
+        } else {
+            setclt('');
+            setDesignt('');
+            setNSerie('');
+        }
+    }, [_idDem, data]);
 
     return (
         <div>
@@ -73,22 +103,18 @@ function Pcescreen() {
                             type='text' 
                             placeholder='Recherche par n° de la demande service' 
                             className='form-control mb-2'
+                            list="demOptions"
                             value={searchTerm} 
                             onChange={handleSearchTermChange}
                         />
-                        <select 
-                            required 
-                            className='form-control mb-4'
-                            value={_idDem} 
-                            onChange={(e) => set_idDem(e.target.value)}
-                        >
-                            <option value="" disabled>Sélectionnez un n° de la demande service</option>
+                        <datalist id="demOptions">
                             {filteredData.map(item => (
                                 <option key={item._idDem} value={item._idDem}>
                                     {item._idDem}
                                 </option>
                             ))}
-                        </select>
+                        </datalist>
+                        
                         <input 
                             required 
                             type='text' 
